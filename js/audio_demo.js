@@ -8,7 +8,7 @@ var models = {
 	'Drums': {
 		'classes': ['Tom', 'Kick', 'Snare', 'HiHat', 'Clap'],
 		'path': 'data/models/drums',
-		'num_samples': 100, // number of audio samples for x and y dimension 
+		'num_samples': 30, // number of audio samples for x and y dimension 
 		}
 	} 
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			relative_xy = [clamp(relative_xy[0],0.0,1.0), clamp(relative_xy[1],0.0,1.0)];
 			let sn = models[active_model].num_samples;
 			let square = [Math.floor(relative_xy[0]*sn), Math.floor(relative_xy[1]*sn)];
-			let wav_path = models[active_model].path + '/samples/generated_' + square[0]+ '_' + square[1] + '.wav';
+			let wav_path = models[active_model].path + '/samples/generated_' + pad(square[0], 5) + '_' + pad(square[1], 5) + '.wav';
 			console.log(relative_xy[0] + ' ' + relative_xy[1] + ' - ' + square[0] + ' ' + square[1] + ' ' + wav_path);
 			play_wav(wav_path);
 		}, true);
