@@ -6,16 +6,13 @@ var cctx = null
 // specific variables for one generator model visualization
 var models = {
 	'Drums': {
-		'classes': ['kick', 'hihat', 'snare'],
-		'path': 'data/samples/drums',
-		'num_samples': 10, // number of audio samples for x and y dimension 
-		
+		'classes': ['Tom', 'Kick', 'Snare', 'HiHat', 'Clap'],
+		'path': 'data/models/drums',
+		'num_samples': 100, // number of audio samples for x and y dimension 
 		}
-	
-	
-	
 	} 
 
+var active_model = 'Drums';
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -23,11 +20,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	cctx = c.getContext('2d');
 	square_canvas(c);
 	
-	c.addEventListener('mousemove', e => {
+	c.addEventListener('click', e => {
 			let mouse_xy = get_mouse_position(e);
 			let relative_xy = [(mouse_xy[0]/e.target.clientWidth),(mouse_xy[1]/e.target.clientHeight)];
 			relative_xy = [clamp(relative_xy[0],0.0,1.0), clamp(relative_xy[1],0.0,1.0)];
-			console.log(relative_xy[0] + ' ' + relative_xy[1]);
+			let sn = models[active_model].num_samples;
+			let square = [Math.floor(relative_xy[0]*sn), Math.floor(relative_xy[1]*sn)];
+			let wav_path = models[active_model].path + '/samples/generated_' + square[0]+ '_' + square[1] + '.wav';
+			console.log(relative_xy[0] + ' ' + relative_xy[1] + ' - ' + square[0] + ' ' + square[1] + ' ' + wav_path);
+			play_wav(wav_path);
 		}, true);
 });
 
@@ -35,6 +36,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 //
 // helper functions
 //
+
+
+function play_wav(path) {
+  var audio = new Audio(path);
+  audio.play();
+}
 
 // make canvas squared in shape
 function square_canvas(canvas) {

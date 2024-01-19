@@ -8,7 +8,7 @@
     <meta name="author" content="TODO">
 
 	<link href="style.css" rel="stylesheet">
-	<title>Deeply Dreaming about Object Detection</title>
+	<title>Audio Transformer</title>
 
 	<script src="js/audio_demo.js"></script>
 
@@ -30,15 +30,50 @@
 				  
 				  
 			<h3 id="authors">Authors: anonymous</h3>
-				  	
-				  
+				
+	  
 			<h2 id="abstract">Abstract</h2>
 			<p id="abstract_txt">
 				
-				This article introduces a Transformer-based Generative-model that is capable of generating high quality audio samples for music production by conditioning the transformer by a simple 2d coordinate within a condition/sample map. With the rise of language models,
-				also for audio generation language is used for generating samples. However, we think that in this domain this is not working because a sample cannot be described by a natural language. It is more natural for the human to describe an abstract thing with words 
-				as 'closer to this' or 'I want something more in this direction'. We therefore conditioned a transformer with a trained 2d embedding for querying audio samples more intuitively and efficient. Our results can be explored by a interactive web demo.
+				
+This article introduces a Transformer-based model capable of generating high quality audio samples for music production by conditioning the model with a coordinate on a 2d sample map. 
 
+The audio domain poses major challenges for generative models, particularly due to the extended sequence lengths involved. This difficulty is amplified in music production, where samples must exhibit high quality to be integrated into songs.
+
+Current generative approaches often rely on a text embedding for conditioning as in many other domains. However, this method proves less suitable for musical sample generation, as nuances in samples cannot be adequately expressed through text. 
+Human intuition often leans towards describing abstract concepts with phrases like 'closer to this' or 'I want something more in this direction.'
+
+In pursuit of a more intuitive and efficient approach, we conditioned a Transformer with a pre-trained 2D embedding for querying audio samples. This allows for a more natural interaction with the model, aligning with how humans express preferences.
+
+Our results, showcased through an interactive web demo (LINK), aim to expand perspectives on querying audio samples and offer a potential evolution of future digital audio workstations. 
+We envision a more user-friendly and creative environment for music producers, allowing for seamless exploration and manipulation of audio elements.
+
+
+
+
+
+
+				
+				
+<!--
+% 1. Satz: Narrativ, was wird gemacht? Reason for writing/reading
+% 2. Satz: Was ist das Problem und was ist gerade Stand der Technick? +
+% 3. Satz: Was macht man anders als der Stand der Technik, was ist die eigene Methologie
+% 4. Satz: Was sind die Ergebnisse?
+% 5. Was implizieren die Ergebnisse fuer die Zukunft? How does this work add to the body of knowledge on the topic?
+
+
+This article introduces a Transformer-based model capable of generating high quality audio samples for music production by conditioning the model with a coordinate on a 2d sample map. 
+
+Especially the audio domain is difficult for generative models because of long sequence lengths. Especially for music production it is hard because samples have to have a high quality to be used within songs.
+
+State of the art approaches primarily condition sound by a text embedding which is not very suitable for musical sample generation since samples differ by nuances that can not be expressed by text. 
+It is more natural for the human to describe an abstract thing with words as 'closer to this' or 'I want something more in this direction'. 
+
+To achieve this we conditioned a transformer with a trained 2d embedding for querying audio samples more intuitively and efficient. 
+
+By our results, which we demonstrate by an interactive web-demo (LINK), we hope to broaden the perspective on how to query audio samples and how a future digital audio workstation could be. 
+-->
 
 			</p>
 			
@@ -56,7 +91,7 @@
 
 
 				<div class="figure_caption">
-					With our interactive visualization, you can explore the 2d space learned by our approach. Select a point to play a generated sample 
+					Our interactive model, lets you generate musical samples by querying points on a 2d plane. The trained data embedding is displayed for orientation. Click on any point by a point for playing the related sample (speaker or headphones required).
 				</div>
 
 			</div></div>
