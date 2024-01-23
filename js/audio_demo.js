@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		const div = document.createElement('div');
 		div.setAttribute('class', 'class_div');
 		div.setAttribute('id', 'class_div_' + i);
-		div.setAttribute('style', 'background-color: ' + models[active_model].colors[i+1]);
+		div.setAttribute('style', 'background-color: ' + models[active_model].colors[i]);
 		div.innerHTML = models[active_model].classes[i];
 		classesdiv.appendChild(div);
 	}
