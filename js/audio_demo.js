@@ -10,7 +10,7 @@ var models = {
 		'classes': ["tom","kick","snare","hihat","clap","synth"],
 		'colors': ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff','#bbbbbb','#000000'],
 		'path': 'data/models/drums',
-		'num_samples': 50, // number of audio samples for x and y dimension 
+		'num_samples': 30, // number of audio samples for x and y dimension 
 	}
 } 
 
