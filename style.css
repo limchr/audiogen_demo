@@ -31,8 +31,9 @@ a {
   background-color: rgb(245,245,245);
 }
 #inner_headsection {
-  width: 95%;
-  max-width: 950px;
+  width: 90%;
+  max-width: 1200px;
+
   margin: auto;
 }
 
@@ -64,7 +65,7 @@ a {
 
 .inner_figure {
   width: 90%;
-  max-width: 800px;
+  max-width: 1200px;
   margin: auto;
   padding: 10px;
 }

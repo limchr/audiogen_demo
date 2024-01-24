@@ -8,9 +8,20 @@ var svg = null;
 var models = {
 	'Drums': {
 		'classes': ["tom","kick","snare","hihat","clap","synth"],
-		'colors': ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff','#bbbbbb','#000000'],
+		'colors': [
+			[255,0,0],
+			[0,255,0],
+			[0,0,255],
+			[255,255,0],
+			[0,255,255],
+			[255,0,255],
+			[255,255,255],
+			[0,0,0]
+		],
+			
+			
 		'path': 'data/models/drums',
-		'num_samples': 30, // number of audio samples for x and y dimension 
+		'num_samples': 50, // number of audio samples for x and y dimension 
 	}
 } 
 
@@ -59,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				circle.setAttribute('cx', zx[i]);
 				circle.setAttribute('cy', zy[i]);
 				circle.setAttribute('r', 0.01); // Set the radius of the circles
-
-				circle.setAttribute('fill', models[active_model].colors[y_numeric[i]]);
+				
+				circle.setAttribute('fill', 'rgb('+models[active_model].colors[y_numeric[i]].join(',')+')');
 
 				// Set the outline or stroke color and width
 				circle.setAttribute('stroke', 'black'); // Set the outline color
@@ -72,9 +83,58 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 			}
 
-			// Create circles for each data point
-			data.forEach(d => {
-			});
+
+			// draw background image
+			let step_size = canvas.clientWidth/models[active_model].num_samples;
+
+			for (let i=0; i<canvas.clientWidth; i=i+step_size) {
+				for (let j=0; j<canvas.clientHeight; j=j+step_size) {
+					let xp = (((i+step_size/2)/canvas.clientWidth)*2)-1;
+					let yp = (((j+step_size/2)/canvas.clientHeight)*2)-1;
+
+					// get neigherst neighbors of [xp,yp] in zx,zy
+					let n_neighbors = 5;
+					let nns = [];
+					let nns_dist = [];
+					for (let k = 0; k < zx.length; k++) {
+						let dist = Math.sqrt(Math.pow(xp-zx[k],2)+Math.pow(yp-zy[k],2));
+						if(nns.length < n_neighbors) {
+							nns.push(k);
+							nns_dist.push(dist);
+						} else {
+							let max_dist = Math.max(...nns_dist);
+							if(dist < max_dist) {
+								let max_dist_index = nns_dist.indexOf(max_dist);
+								nns[max_dist_index] = k;
+								nns_dist[max_dist_index] = dist;
+							}
+						}
+					}
+
+					// get mode of nns
+					let counts = {};
+					let mode = null;
+					let max_count = 0;
+					for (let k = 0; k < nns.length; k++) {
+						let n = y_numeric[nns[k]];
+						if(counts[n] == null) counts[n] = 0;
+						counts[n] += 1;
+						if(counts[n] > max_count) {
+							max_count = counts[n];
+							mode = n;
+						}
+					}
+
+					// set color
+					canvas_context.fillStyle = 'rgb('+models[active_model].colors[mode].join(',')+')';  // Red color
+					canvas_context.fillRect(i, j, Math.ceil(step_size), Math.ceil(step_size));
+						
+
+		
+				}
+			}
+
+
 		}
 	};
 
@@ -87,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		const div = document.createElement('div');
 		div.setAttribute('class', 'class_div');
 		div.setAttribute('id', 'class_div_' + i);
-		div.setAttribute('style', 'background-color: ' + models[active_model].colors[i]);
+		div.setAttribute('style', 'background-color: rgb('+models[active_model].colors[i].join(',')+')');
 		div.innerHTML = models[active_model].classes[i];
 		classesdiv.appendChild(div);
 	}
@@ -133,6 +193,11 @@ function square_elem(elem, s=null) {
     if(s==null) s = elem.clientWidth; // offsetWidth for adding the 2px borders
 	elem.style.width = s+'px';
 	elem.style.height = s+'px';
+
+	// for canvases 'internal size' (html is so weired sometimes)
+	elem.width = s;
+	elem.height = s;
+
 	return s;
 }
 
