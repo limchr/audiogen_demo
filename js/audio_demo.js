@@ -9,19 +9,17 @@ var models = {
 	'Drums': {
 		'classes': ["tom","kick","snare","hihat","clap","synth"],
 		'colors': [
-			[255,0,0],
-			[0,255,0],
-			[0,0,255],
-			[255,255,0],
-			[0,255,255],
-			[255,0,255],
-			[255,255,255],
-			[0,0,0]
-		],
-			
-			
+			[255, 102, 102],  // Light Red
+			[255, 204, 102],  // Orange
+			[255, 255, 102],  // Yellow
+			[102, 255, 102],  // Light Green
+			[102, 204, 255],  // Light Blue
+			[204, 102, 255],  // Purple
+			[255, 153, 255],  // Pink
+			[153, 153, 153]   // Gray
+				],
 		'path': 'data/models/drums',
-		'num_samples': 50, // number of audio samples for x and y dimension 
+		'num_samples': 80, // number of audio samples for x and y dimension 
 	}
 } 
 
@@ -93,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 					let yp = (((j+step_size/2)/canvas.clientHeight)*2)-1;
 
 					// get neigherst neighbors of [xp,yp] in zx,zy
-					let n_neighbors = 5;
+					let n_neighbors = 3;
 					let nns = [];
 					let nns_dist = [];
 					for (let k = 0; k < zx.length; k++) {
@@ -125,16 +123,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 						}
 					}
 
-					// set color
-					canvas_context.fillStyle = 'rgb('+models[active_model].colors[mode].join(',')+')';  // Red color
-					canvas_context.fillRect(i, j, Math.ceil(step_size), Math.ceil(step_size));
-						
+					let paint_colors = [];
+					let paint_weights = [];
+					for (let k=0;k<Object.keys(counts).length;k++) {
+						let ind = Object.keys(counts)[k];
+						paint_colors.push(models[active_model].colors[ind]);
+						paint_weights.push(counts[ind]);
+					}
+					let mixed_color = mixColors(paint_colors, paint_weights);
 
-		
+					canvas_context.fillStyle = 'rgb('+mixed_color.join(',')+')';  // Red color
+					canvas_context.fillRect(i+1, j+1, Math.ceil(step_size)-2, Math.ceil(step_size)-2);
+						
 				}
 			}
-
-
 		}
 	};
 
@@ -152,15 +154,42 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		classesdiv.appendChild(div);
 	}
 
-
-
-	
 });
 
 
 //
 // helper functions
 //
+
+
+function mixColors(colors, weights) {
+    if (colors.length !== weights.length) {
+        throw new Error("The lengths of the colors and weights arrays must be the same.");
+    }
+    let totalRed = Number(0);
+    let totalGreen = Number(0);
+    let totalBlue = Number(0);
+	let totalWeights = 0;
+	for (let i = 0; i < colors.length; i++) {
+        const weight = weights[i];
+		totalWeights += weight;
+		const [r, g, b] = colors[i];
+
+        // Accumulate the total values by multiplying each channel by the weight
+        totalRed += r * weight;
+        totalGreen += g * weight;
+        totalBlue += b * weight;
+    }
+
+    // Calculate the average value for each color channel
+    const avgRed = Math.round(totalRed / totalWeights);
+    const avgGreen = Math.round(totalGreen / totalWeights);
+    const avgBlue = Math.round(totalBlue / totalWeights);
+
+    return [avgRed, avgGreen, avgBlue];
+}
+
+
 
 
 // Function to parse CSV data
