@@ -26,7 +26,7 @@
 
 				
 			<div id="headsection"><div id="inner_headsection">
-			<h1 id="title">High Quality Audio Generation by 2D-Conditioned Transformer Architecture</h1>
+			<h1 id="title">Mapping the Soundscape: A Transformer-VAE Approach for Intuitive Audio Sample Generation</h1>
 				  
 				  
 			<h3 id="authors">Authors: anonymous</h3>
@@ -36,18 +36,7 @@
 			<p id="abstract_txt">
 				
 				
-This article introduces a Transformer-based model capable of generating high quality audio samples for music production by conditioning the model with a coordinate on a 2d sample map. 
-
-The audio domain poses major challenges for generative models, particularly due to the extended sequence lengths involved. This difficulty is amplified in music production, where samples must exhibit high quality to be integrated into songs.
-
-Current generative approaches often rely on a text embedding for conditioning as in many other domains. However, this method proves less suitable for musical sample generation, as nuances in samples cannot be adequately expressed through text. 
-Human intuition often leans towards describing abstract concepts with phrases like 'closer to this' or 'I want something more in this direction.'
-
-In pursuit of a more intuitive and efficient approach, we conditioned a Transformer with a pre-trained 2D embedding for querying audio samples. This allows for a more natural interaction with the model, aligning with how humans express preferences.
-
-Our results, showcased through an interactive web demo (LINK), aim to expand perspectives on querying audio samples and offer a potential evolution of future digital audio workstations. 
-We envision a more user-friendly and creative environment for music producers, allowing for seamless exploration and manipulation of audio elements.
-
+				This article introduces a Transformer-based model capable of generating high quality audio samples for music production by conditioning the model with a latent coordinate on a 2d sample map. The audio domain poses major challenges for generative models, particularly due to the extended sequence lengths involved. This difficulty is amplified in music production, where samples must exhibit high quality to be integrated into songs. Current generative approaches often rely on a text embedding for conditioning as in many other domains. However, this method proves less suitable for musical sample generation, as nuances in samples cannot be adequately expressed through text. Human intuition often leans towards describing abstract concepts with phrases like 'closer to this' or 'I want something more in this direction.' In pursuit of a more intuitive and efficient approach, we conditioned a Transformer model with a pre-trained Variational Autoencoder for generating audio samples. Both models are trained in an unsupervised fashion, allowing for training on large amounts of unsupervised data. Our approach allows for a more natural interaction with the model, aligning with how humans express preferences. Our results, showcased through an interactive web demo, aim to expand perspectives on querying audio samples and offer a potential evolution of future digital audio workstations. We envision a more user-friendly and creative environment for music producers, allowing for seamless exploration and manipulation of audio elements.    
 
 
 
@@ -102,6 +91,19 @@ By our results, which we demonstrate by an interactive web-demo (LINK), we hope 
 				</div>
 
 			</div></div>
+
+			<div class="figure"><div class="inner_figure">
+				<a id="fig2"></a> 
+				<h3 class="figure_title"> Model Architecture </h3>
+
+				<img src="gfx/smap.png" alt="Model Architecture" style="width:100%;">
+
+				<div class="figure_caption">
+					Our interactive model, lets you generate musical samples by querying points on a 2d plane. The trained data embedding is displayed for orientation. Click on any point by a point for playing the related sample (speaker or headphones required).
+				</div>
+
+			</div></div>
+
 
 
 
