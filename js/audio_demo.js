@@ -7,7 +7,7 @@ var svg = null;
 // specific variables for one generator model visualization
 var models = {
 	'Drums': {
-		'classes': ["tom","kick","snare","hihat","clap","synth"],
+		'classes': ["tom","kick","snare","hihat","clap"],
 		'colors': [
 			[255, 102, 102],  // Light Red
 			[255, 204, 102],  // Orange
@@ -19,7 +19,7 @@ var models = {
 			[153, 153, 153]   // Gray
 				],
 		'path': 'data/models/drums',
-		'num_samples': 80, // number of audio samples for x and y dimension 
+		'num_samples': 60, // number of audio samples for x and y dimension 
 	}
 } 
 
