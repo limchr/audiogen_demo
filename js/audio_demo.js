@@ -19,7 +19,7 @@ var models = {
 			[153, 153, 153]   // Gray
 				],
 		'path': 'data/models/drums',
-		'num_samples': 80, // number of audio samples for x and y dimension 
+		'num_samples': 120, // number of audio samples for x and y dimension 
 	}
 } 
 
