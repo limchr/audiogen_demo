@@ -19,7 +19,8 @@ var models = {
 			[153, 153, 153]   // Gray
 				],
 		'path': 'data/models/drums',
-		'num_samples': 80, // number of audio samples for x and y dimension 
+		'num_samples': 200, // number of audio samples for x and y dimension 
+		'draw_prerendered_image': true,
 	}
 } 
 
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	svg.addEventListener('click', e => {
 			let mouse_xy = get_mouse_position(e);
 			let relative_xy = [(mouse_xy[0]/e.target.clientWidth),(mouse_xy[1]/e.target.clientHeight)];
-			relative_xy = [clamp(relative_xy[0],0.0,0.999), clamp(relative_xy[1],0.0,0.999)];
+			relative_xy = [clamp(relative_xy[0],0.0,0.999), 1-clamp(relative_xy[1],0.0,0.999)];
 			let sn = models[active_model].num_samples;
 			let square = [Math.floor(relative_xy[0]*sn), Math.floor(relative_xy[1]*sn)];
 			let wav_path = models[active_model].path + '/samples/generated_' + pad(square[0], 5) + '_' + pad(square[1], 5) + '.wav';
@@ -45,6 +46,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			play_wav(wav_path);
 		}, true);
 
+
+
+
+	if(models[active_model]['draw_prerendered_image']) {
+		img = new Image();
+		img.src = models[active_model].path+'/map.png';
+		img.onload = function() {
+			set_canvas_image(canvas,canvas_context,this, this.width);
+		};
+	
+	}
+
+	
+
+
+
+	//
+	// sophisticated js method for drawing
+	//
 
 	// load csv file y.csv from server
 
@@ -60,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			const data = parse_csv(xhr.responseText);
 
 			const zx = data.map(d => parseFloat(d[0]));
-			const zy = data.map(d => parseFloat(d[1]));
+			const zy = data.map(d => -1 * parseFloat(d[1]));
 			const y_numeric = data.map(d => parseInt(d[2]));
 
 			for (let i = 0; i < zx.length; i++) {
@@ -83,58 +103,60 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 			// draw background image
-			let step_size = canvas.clientWidth/models[active_model].num_samples;
+			if(!models[active_model]['draw_prerendered_image']) {
+				let step_size = canvas.clientWidth/models[active_model].num_samples;
 
-			for (let i=0; i<canvas.clientWidth; i=i+step_size) {
-				for (let j=0; j<canvas.clientHeight; j=j+step_size) {
-					let xp = (((i+step_size/2)/canvas.clientWidth)*2)-1;
-					let yp = (((j+step_size/2)/canvas.clientHeight)*2)-1;
+				for (let i=0; i<canvas.clientWidth; i=i+step_size) {
+					for (let j=0; j<canvas.clientHeight; j=j+step_size) {
+						let xp = (((i+step_size/2)/canvas.clientWidth)*2)-1;
+						let yp = (((j+step_size/2)/canvas.clientHeight)*2)-1;
 
-					// get neigherst neighbors of [xp,yp] in zx,zy
-					let n_neighbors = 3;
-					let nns = [];
-					let nns_dist = [];
-					for (let k = 0; k < zx.length; k++) {
-						let dist = Math.sqrt(Math.pow(xp-zx[k],2)+Math.pow(yp-zy[k],2));
-						if(nns.length < n_neighbors) {
-							nns.push(k);
-							nns_dist.push(dist);
-						} else {
-							let max_dist = Math.max(...nns_dist);
-							if(dist < max_dist) {
-								let max_dist_index = nns_dist.indexOf(max_dist);
-								nns[max_dist_index] = k;
-								nns_dist[max_dist_index] = dist;
+						// get neigherst neighbors of [xp,yp] in zx,zy
+						let n_neighbors = 5;
+						let nns = [];
+						let nns_dist = [];
+						for (let k = 0; k < zx.length; k++) {
+							let dist = Math.sqrt(Math.pow(xp-zx[k],2)+Math.pow(yp-zy[k],2));
+							if(nns.length < n_neighbors) {
+								nns.push(k);
+								nns_dist.push(dist);
+							} else {
+								let max_dist = Math.max(...nns_dist);
+								if(dist < max_dist) {
+									let max_dist_index = nns_dist.indexOf(max_dist);
+									nns[max_dist_index] = k;
+									nns_dist[max_dist_index] = dist;
+								}
 							}
 						}
-					}
 
-					// get mode of nns
-					let counts = {};
-					let mode = null;
-					let max_count = 0;
-					for (let k = 0; k < nns.length; k++) {
-						let n = y_numeric[nns[k]];
-						if(counts[n] == null) counts[n] = 0;
-						counts[n] += 1;
-						if(counts[n] > max_count) {
-							max_count = counts[n];
-							mode = n;
+						// get mode of nns
+						let counts = {};
+						let mode = null;
+						let max_count = 0;
+						for (let k = 0; k < nns.length; k++) {
+							let n = y_numeric[nns[k]];
+							if(counts[n] == null) counts[n] = 0;
+							counts[n] += 1;
+							if(counts[n] > max_count) {
+								max_count = counts[n];
+								mode = n;
+							}
 						}
-					}
 
-					let paint_colors = [];
-					let paint_weights = [];
-					for (let k=0;k<Object.keys(counts).length;k++) {
-						let ind = Object.keys(counts)[k];
-						paint_colors.push(models[active_model].colors[ind]);
-						paint_weights.push(counts[ind]);
-					}
-					let mixed_color = mixColors(paint_colors, paint_weights);
+						let paint_colors = [];
+						let paint_weights = [];
+						for (let k=0;k<Object.keys(counts).length;k++) {
+							let ind = Object.keys(counts)[k];
+							paint_colors.push(models[active_model].colors[ind]);
+							paint_weights.push(counts[ind]);
+						}
+						let mixed_color = mixColors(paint_colors, paint_weights);
 
-					canvas_context.fillStyle = 'rgb('+mixed_color.join(',')+')';  // Red color
-					canvas_context.fillRect(i+1, j+1, Math.ceil(step_size)-2, Math.ceil(step_size)-2);
-						
+						canvas_context.fillStyle = 'rgb('+mixed_color.join(',')+')';
+						canvas_context.fillRect(Math.floor(i), Math.floor(j), Math.ceil(step_size), Math.ceil(step_size));
+							
+					}
 				}
 			}
 		}
@@ -153,6 +175,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		div.innerHTML = models[active_model].classes[i];
 		classesdiv.appendChild(div);
 	}
+
+
+
 
 });
 
@@ -209,7 +234,12 @@ function parse_csv(csvText) {
 	return data;
 }
 
-
+var download_canvas = function(){
+	var link = document.createElement('a');
+	link.download = 'latent_space.png';
+	link.href = canvas.toDataURL()
+	link.click();
+  }
 
 
 function play_wav(path) {
